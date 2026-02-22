@@ -9,8 +9,20 @@ app.onError((err, _c) => {
 });
 
 // Serve static files from frontend and shared directories
-app.get("/frontend/*", (c) => serveFile(c.req.path, import.meta.url));
-app.get("/shared/*", (c) => serveFile(c.req.path, import.meta.url));
+app.get("/frontend/*", async (c) => {
+  try {
+    return await serveFile(c.req.path, import.meta.url);
+  } catch {
+    return c.notFound();
+  }
+});
+app.get("/shared/*", async (c) => {
+  try {
+    return await serveFile(c.req.path, import.meta.url);
+  } catch {
+    return c.notFound();
+  }
+});
 
 // Serve favicon
 app.get("/favicon.svg", (c) => serveFile("/frontend/favicon.svg", import.meta.url));
