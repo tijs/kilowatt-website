@@ -27,6 +27,11 @@
   <!-- Favicon -->
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
   <!-- TailwindCSS -->
   <script src="https://cdn.twind.style" crossorigin></script>
 
@@ -35,20 +40,111 @@
 
   <style>
     html { scroll-behavior: smooth; }
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
-    .hero-gradient { background: linear-gradient(180deg, #F5F5F7 0%, #E8F4FC 100%); }
-    .feature-card { transition: transform 0.2s ease, box-shadow 0.2s ease; }
-    .feature-card:hover { transform: translateY(-4px); box-shadow: 0 12px 24px rgba(0,0,0,0.1); }
-    .screenshot-scroll { scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; }
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #F7F8FA;
+      color: #1A1A2E;
+      overflow-x: hidden;
+    }
+
+    /* Hero */
+    .hero-section {
+      background:
+        radial-gradient(ellipse 80% 60% at 50% 0%, rgba(45, 156, 219, 0.08) 0%, transparent 70%),
+        linear-gradient(180deg, #F7F8FA 0%, #EEF4F9 100%);
+    }
+
+    /* Cards */
+    .feature-card {
+      transition: transform 0.3s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+    .feature-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(45, 156, 219, 0.08);
+    }
+
+    /* Screenshots horizontal scroll */
+    .screenshot-scroll {
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+    }
     .screenshot-scroll > * { scroll-snap-align: center; }
-    @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+
+    /* Reviews carousel */
+    .reviews-track {
+      display: flex;
+      animation: scroll-reviews 30s linear infinite;
+    }
+    .reviews-track:hover { animation-play-state: paused; }
+    @keyframes scroll-reviews {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    /* Fade-in on scroll */
+    .reveal-hidden {
+      opacity: 0 !important;
+      transform: translateY(24px) !important;
+    }
+    .reveal {
+      transition: opacity 0.7s cubic-bezier(0.23, 1, 0.32, 1), transform 0.7s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+    .reveal-visible {
+      opacity: 1 !important;
+      transform: translateY(0) !important;
+    }
+
+    /* Price badge */
+    .price-badge {
+      background: linear-gradient(135deg, #2D9CDB 0%, #1B7BB5 100%);
+      color: white;
+      font-weight: 700;
+      font-size: 0.875rem;
+      padding: 0.35rem 0.9rem;
+      border-radius: 100px;
+      display: inline-block;
+      letter-spacing: 0.02em;
+    }
+
+    /* Subtle grain overlay */
+    .grain::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      opacity: 0.03;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+      pointer-events: none;
+    }
+
+    /* Star rating */
+    .star { color: #F2C94D; }
+
+    /* Secondary feature pill */
+    .mini-feature {
+      background: white;
+      border: 1px solid rgba(0,0,0,0.06);
+      border-radius: 16px;
+      padding: 1.25rem 1rem;
+      text-align: center;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .mini-feature:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+    }
+
+    /* Float animation for illustrations */
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
     .float-animation { animation: float 3s ease-in-out infinite; }
   </style>
 </head>
-<body class="bg-[#F5F5F7] text-[#1D1D1F]">
+<body>
 
   <!-- Hero Section -->
-  <section class="hero-gradient min-h-screen flex flex-col items-center justify-center px-4 py-16 relative overflow-hidden">
+  <section class="hero-section grain relative min-h-screen flex flex-col items-center justify-center px-4 py-20">
     <div class="max-w-4xl mx-auto text-center z-10">
       <!-- App Icon -->
       <img
@@ -58,31 +154,35 @@
       >
 
       <!-- Headlines -->
-      <h1 class="text-4xl md:text-6xl font-bold mb-4 tracking-tight">
+      <h1 class="text-4xl md:text-6xl font-extrabold mb-4 tracking-tight leading-tight">
         Know exactly when your<br>
         <span class="text-[#2D9CDB]">EV will be ready</span>
       </h1>
 
-      <p class="text-lg md:text-xl text-[#86868B] mb-8 max-w-2xl mx-auto">
+      <p class="text-lg md:text-xl text-[#6B7280] mb-8 max-w-2xl mx-auto leading-relaxed">
         Calculate charging times with realistic curves. No more guessing.
       </p>
 
-      <!-- App Store Button -->
-      <a
-        href="https://apps.apple.com/app/id1502312657"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="inline-block hover:opacity-90 transition-opacity"
-      >
-        <img
-          src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/en-us"
-          alt="Download on the App Store"
-          class="h-14 md:h-16"
+      <!-- CTA row -->
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-4">
+        <a
+          href="https://apps.apple.com/app/id1502312657"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-block hover:opacity-90 transition-opacity"
         >
-      </a>
+          <img
+            src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/en-us"
+            alt="Download on the App Store"
+            class="h-14 md:h-16"
+          >
+        </a>
+        <span class="price-badge">Just &euro;1.99</span>
+      </div>
+      <p class="text-sm text-[#9CA3AF]">No ads. No tracking. No subscription.</p>
 
       <!-- Hero Illustration -->
-      <div class="mt-12 md:mt-16">
+      <div class="mt-12 md:mt-16 float-animation">
         <img
           src="https://cdn.kilowattcharging.com/illustrations/garage.png"
           alt="Garage illustration"
@@ -95,19 +195,21 @@
   <!-- Features Section -->
   <section class="py-20 px-4 bg-white">
     <div class="max-w-6xl mx-auto">
-      <h2 class="text-3xl md:text-4xl font-bold text-center mb-4">
-        Everything you need
-      </h2>
-      <p class="text-[#86868B] text-center mb-16 max-w-xl mx-auto">
-        Built for EV drivers who want accurate charging estimates
-      </p>
+      <div class="reveal">
+        <h2 class="text-3xl md:text-5xl font-extrabold text-center mb-4 tracking-tight">
+          Everything you need
+        </h2>
+        <p class="text-[#6B7280] text-center mb-16 max-w-xl mx-auto">
+          Built for EV drivers who want accurate charging estimates
+        </p>
+      </div>
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
         <!-- Feature 1: Realistic Curves -->
-        <div class="feature-card bg-[#F5F5F7] rounded-2xl p-6 md:p-8 flex flex-col">
+        <div class="reveal feature-card bg-[#F7F8FA] rounded-3xl p-6 md:p-8 flex flex-col border border-gray-100">
           <div class="text-4xl mb-4">&#9889;</div>
-          <h3 class="text-xl font-semibold mb-2">Realistic Charging Curves</h3>
-          <p class="text-[#86868B] mb-6 flex-grow">
+          <h3 class="text-xl font-bold mb-2">Realistic Charging Curves</h3>
+          <p class="text-[#6B7280] mb-6 flex-grow">
             Accurate time estimates using real DC fast charging data that accounts for battery state and charger power.
           </p>
           <img
@@ -119,10 +221,10 @@
         </div>
 
         <!-- Feature 2: Garage -->
-        <div class="feature-card bg-[#F5F5F7] rounded-2xl p-6 md:p-8 flex flex-col">
+        <div class="reveal feature-card bg-[#F7F8FA] rounded-3xl p-6 md:p-8 flex flex-col border border-gray-100" style="transition-delay: 0.1s">
           <div class="text-4xl mb-4">&#128663;</div>
-          <h3 class="text-xl font-semibold mb-2">Your Garage</h3>
-          <p class="text-[#86868B] mb-6 flex-grow">
+          <h3 class="text-xl font-bold mb-2">Your Garage</h3>
+          <p class="text-[#6B7280] mb-6 flex-grow">
             Store multiple vehicles with their specifications, or choose from pre-configured templates to get started quickly.
           </p>
           <img
@@ -134,10 +236,10 @@
         </div>
 
         <!-- Feature 3: Cost Calculator -->
-        <div class="feature-card bg-[#F5F5F7] rounded-2xl p-6 md:p-8 flex flex-col">
+        <div class="reveal feature-card bg-[#F7F8FA] rounded-3xl p-6 md:p-8 flex flex-col border border-gray-100" style="transition-delay: 0.2s">
           <div class="text-4xl mb-4">&#128176;</div>
-          <h3 class="text-xl font-semibold mb-2">Know the Cost</h3>
-          <p class="text-[#86868B] mb-6 flex-grow">
+          <h3 class="text-xl font-bold mb-2">Know the Cost</h3>
+          <p class="text-[#6B7280] mb-6 flex-grow">
             Track electricity rates and calculate exactly how much each charging session will cost you.
           </p>
           <img
@@ -152,150 +254,313 @@
   </section>
 
   <!-- Screenshots Showcase -->
-  <section class="py-20 px-4 bg-[#F5F5F7]">
+  <section class="py-20 px-4 bg-[#F7F8FA]">
     <div class="max-w-6xl mx-auto">
-      <h2 class="text-3xl md:text-4xl font-bold text-center mb-4">
-        See it in action
-      </h2>
-      <p class="text-[#86868B] text-center mb-12">
-        Clean, intuitive interface designed for quick access
-      </p>
+      <div class="reveal">
+        <h2 class="text-3xl md:text-5xl font-extrabold text-center mb-4 tracking-tight">
+          See it in action
+        </h2>
+        <p class="text-[#6B7280] text-center mb-12">
+          Clean, intuitive interface designed for quick access
+        </p>
+      </div>
 
-      <div class="screenshot-scroll flex gap-6 overflow-x-auto pb-4 -mx-4 px-4 md:justify-center md:flex-wrap">
+      <div class="screenshot-scroll flex gap-6 overflow-x-auto pb-4 -mx-4 px-4 md:justify-center md:flex-wrap reveal">
         <img
           src="https://cdn.kilowattcharging.com/screenshots/charging-timer.jpeg"
           alt="Charging timer setup"
-          class="w-48 md:w-56 flex-shrink-0 rounded-2xl border border-gray-200 shadow-xl"
+          class="w-48 md:w-56 flex-shrink-0 rounded-3xl border border-gray-200 shadow-xl"
           loading="lazy"
         >
         <img
           src="https://cdn.kilowattcharging.com/screenshots/garage.jpeg"
           alt="Garage view"
-          class="w-48 md:w-56 flex-shrink-0 rounded-2xl border border-gray-200 shadow-xl"
+          class="w-48 md:w-56 flex-shrink-0 rounded-3xl border border-gray-200 shadow-xl"
           loading="lazy"
         >
         <img
           src="https://cdn.kilowattcharging.com/screenshots/vehicle-edit.jpeg"
           alt="Vehicle edit form"
-          class="w-48 md:w-56 flex-shrink-0 rounded-2xl border border-gray-200 shadow-xl"
+          class="w-48 md:w-56 flex-shrink-0 rounded-3xl border border-gray-200 shadow-xl"
           loading="lazy"
         >
         <img
           src="https://cdn.kilowattcharging.com/screenshots/screenshot-2.jpeg"
           alt="App screenshot"
-          class="w-48 md:w-56 flex-shrink-0 rounded-2xl border border-gray-200 shadow-xl"
+          class="w-48 md:w-56 flex-shrink-0 rounded-3xl border border-gray-200 shadow-xl"
           loading="lazy"
         >
       </div>
     </div>
   </section>
 
-  <!-- Secondary Features -->
-  <section class="py-20 px-4 bg-white">
-    <div class="max-w-4xl mx-auto">
-      <h2 class="text-3xl md:text-4xl font-bold text-center mb-12">
-        And so much more
-      </h2>
-
-      <div class="grid grid-cols-2 md:grid-cols-3 gap-6 md:gap-8">
-        <div class="text-center p-4">
-          <div class="text-3xl mb-2">&#127760;</div>
-          <h3 class="font-semibold mb-1">19 Languages</h3>
-          <p class="text-sm text-[#86868B]">Use it in your language</p>
-        </div>
-
-        <div class="text-center p-4">
-          <div class="text-3xl mb-2">&#128268;</div>
-          <h3 class="font-semibold mb-1">Works Offline</h3>
-          <p class="text-sm text-[#86868B]">No internet required</p>
-        </div>
-
-        <div class="text-center p-4">
-          <div class="text-3xl mb-2">&#128274;</div>
-          <h3 class="font-semibold mb-1">Privacy First</h3>
-          <p class="text-sm text-[#86868B]">No account needed</p>
-        </div>
-
-        <div class="text-center p-4">
-          <div class="text-3xl mb-2">&#128241;</div>
-          <h3 class="font-semibold mb-1">Home Screen Widgets</h3>
-          <p class="text-sm text-[#86868B]">Monitor from home screen</p>
-        </div>
-
-        <div class="text-center p-4">
-          <div class="text-3xl mb-2">&#127912;</div>
-          <h3 class="font-semibold mb-1">Custom Icons</h3>
-          <p class="text-sm text-[#86868B]">Fun alternate icons</p>
-        </div>
-
-        <div class="text-center p-4">
-          <div class="text-3xl mb-2">&#9889;</div>
-          <h3 class="font-semibold mb-1">400V & 800V</h3>
-          <p class="text-sm text-[#86868B]">Voltage efficiency</p>
-        </div>
+  <!-- Reviews Section -->
+  <section class="py-20 px-4 bg-white overflow-hidden">
+    <div class="max-w-6xl mx-auto">
+      <div class="reveal">
+        <h2 class="text-3xl md:text-5xl font-extrabold text-center mb-4 tracking-tight">
+          Loved by EV drivers
+        </h2>
+        <p class="text-[#6B7280] text-center mb-12">
+          What people are saying on the App Store
+        </p>
       </div>
 
+      <div class="relative">
+        <!-- Fade edges -->
+        <div class="absolute left-0 top-0 bottom-0 w-16 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none"></div>
+        <div class="absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none"></div>
+
+        <div class="overflow-hidden">
+          <div class="reviews-track">
+            <!-- Review set (duplicated for seamless loop) -->
+            <div class="flex gap-6 pr-6">
+              <div class="flex-shrink-0 w-80 bg-[#F7F8FA] rounded-2xl p-6 border border-gray-100">
+                <div class="flex items-center gap-1 mb-3">
+                  <span class="star">&#9733;</span><span class="star">&#9733;</span><span class="star">&#9733;</span><span class="star">&#9733;</span><span class="star">&#9733;</span>
+                </div>
+                <p class="text-[#1A1A2E] font-semibold mb-2">&ldquo;An amazing app&rdquo;</p>
+                <p class="text-sm text-[#6B7280] mb-3">One of the most useful apps I have downloaded since getting my EV. It is absolutely amazing for what it does.</p>
+                <p class="text-xs text-[#9CA3AF]">jcrymble &mdash; App Store UK</p>
+              </div>
+
+              <div class="flex-shrink-0 w-80 bg-[#F7F8FA] rounded-2xl p-6 border border-gray-100">
+                <div class="flex items-center gap-1 mb-3">
+                  <span class="star">&#9733;</span><span class="star">&#9733;</span><span class="star">&#9733;</span><span class="star">&#9733;</span><span class="star">&#9733;</span>
+                </div>
+                <p class="text-[#1A1A2E] font-semibold mb-2">&ldquo;The most useful EV app&rdquo;</p>
+                <p class="text-sm text-[#6B7280] mb-3">Since I rely on public charging, it&rsquo;s invaluable to quickly determine whether it&rsquo;s worth driving a little farther for a cheaper charge.</p>
+                <p class="text-xs text-[#9CA3AF]">minister of jam &mdash; App Store UK</p>
+              </div>
+
+              <div class="flex-shrink-0 w-80 bg-[#F7F8FA] rounded-2xl p-6 border border-gray-100">
+                <div class="flex items-center gap-1 mb-3">
+                  <span class="star">&#9733;</span><span class="star">&#9733;</span><span class="star">&#9733;</span><span class="star">&#9733;</span><span class="star">&#9733;</span>
+                </div>
+                <p class="text-[#1A1A2E] font-semibold mb-2">&ldquo;Nice, useful, great to not kill battery&rdquo;</p>
+                <p class="text-sm text-[#6B7280] mb-3">I just got this app and already love it. It has a sleek design and does a good job at calculating the correct time to unplug your car.</p>
+                <p class="text-xs text-[#9CA3AF]">Tieguy25 &mdash; App Store US</p>
+              </div>
+
+              <div class="flex-shrink-0 w-80 bg-[#F7F8FA] rounded-2xl p-6 border border-gray-100">
+                <div class="flex items-center gap-1 mb-3">
+                  <span class="star">&#9733;</span><span class="star">&#9733;</span><span class="star">&#9733;</span><span class="star">&#9733;</span><span class="star">&#9733;</span>
+                </div>
+                <p class="text-[#1A1A2E] font-semibold mb-2">&ldquo;Does what it says&rdquo;</p>
+                <p class="text-sm text-[#6B7280] mb-3">Straightforward app with a clean user interface. The list of EVs is comprehensive and seems to cover the major marques and variants.</p>
+                <p class="text-xs text-[#9CA3AF]">Echus &mdash; App Store AU</p>
+              </div>
+
+              <div class="flex-shrink-0 w-80 bg-[#F7F8FA] rounded-2xl p-6 border border-gray-100">
+                <div class="flex items-center gap-1 mb-3">
+                  <span class="star">&#9733;</span><span class="star">&#9733;</span><span class="star">&#9733;</span><span class="star">&#9733;</span><span class="star">&#9733;</span>
+                </div>
+                <p class="text-[#1A1A2E] font-semibold mb-2">&ldquo;Excellent aid to EV charging&rdquo;</p>
+                <p class="text-sm text-[#6B7280] mb-3">Cuts down on the guesswork as to how long it&rsquo;s going to take to charge up. Helpful in planning journeys.</p>
+                <p class="text-xs text-[#9CA3AF]">bertybus &mdash; App Store UK</p>
+              </div>
+
+              <div class="flex-shrink-0 w-80 bg-[#F7F8FA] rounded-2xl p-6 border border-gray-100">
+                <div class="flex items-center gap-1 mb-3">
+                  <span class="star">&#9733;</span><span class="star">&#9733;</span><span class="star">&#9733;</span><span class="star">&#9733;</span><span class="star">&#9733;</span>
+                </div>
+                <p class="text-[#1A1A2E] font-semibold mb-2">&ldquo;Exactly what I was looking for!&rdquo;</p>
+                <p class="text-sm text-[#6B7280] mb-3">As an EV driver you don&rsquo;t need more than this &mdash; everything is here. Clear, well-organized, not cluttered.</p>
+                <p class="text-xs text-[#9CA3AF]">Pebba &mdash; App Store DE</p>
+              </div>
+            </div>
+
+            <!-- Duplicate for seamless loop -->
+            <div class="flex gap-6 pr-6" aria-hidden="true">
+              <div class="flex-shrink-0 w-80 bg-[#F7F8FA] rounded-2xl p-6 border border-gray-100">
+                <div class="flex items-center gap-1 mb-3">
+                  <span class="star">&#9733;</span><span class="star">&#9733;</span><span class="star">&#9733;</span><span class="star">&#9733;</span><span class="star">&#9733;</span>
+                </div>
+                <p class="text-[#1A1A2E] font-semibold mb-2">&ldquo;An amazing app&rdquo;</p>
+                <p class="text-sm text-[#6B7280] mb-3">One of the most useful apps I have downloaded since getting my EV. It is absolutely amazing for what it does.</p>
+                <p class="text-xs text-[#9CA3AF]">jcrymble &mdash; App Store UK</p>
+              </div>
+
+              <div class="flex-shrink-0 w-80 bg-[#F7F8FA] rounded-2xl p-6 border border-gray-100">
+                <div class="flex items-center gap-1 mb-3">
+                  <span class="star">&#9733;</span><span class="star">&#9733;</span><span class="star">&#9733;</span><span class="star">&#9733;</span><span class="star">&#9733;</span>
+                </div>
+                <p class="text-[#1A1A2E] font-semibold mb-2">&ldquo;The most useful EV app&rdquo;</p>
+                <p class="text-sm text-[#6B7280] mb-3">Since I rely on public charging, it&rsquo;s invaluable to quickly determine whether it&rsquo;s worth driving a little farther for a cheaper charge.</p>
+                <p class="text-xs text-[#9CA3AF]">minister of jam &mdash; App Store UK</p>
+              </div>
+
+              <div class="flex-shrink-0 w-80 bg-[#F7F8FA] rounded-2xl p-6 border border-gray-100">
+                <div class="flex items-center gap-1 mb-3">
+                  <span class="star">&#9733;</span><span class="star">&#9733;</span><span class="star">&#9733;</span><span class="star">&#9733;</span><span class="star">&#9733;</span>
+                </div>
+                <p class="text-[#1A1A2E] font-semibold mb-2">&ldquo;Nice, useful, great to not kill battery&rdquo;</p>
+                <p class="text-sm text-[#6B7280] mb-3">I just got this app and already love it. It has a sleek design and does a good job at calculating the correct time to unplug your car.</p>
+                <p class="text-xs text-[#9CA3AF]">Tieguy25 &mdash; App Store US</p>
+              </div>
+
+              <div class="flex-shrink-0 w-80 bg-[#F7F8FA] rounded-2xl p-6 border border-gray-100">
+                <div class="flex items-center gap-1 mb-3">
+                  <span class="star">&#9733;</span><span class="star">&#9733;</span><span class="star">&#9733;</span><span class="star">&#9733;</span><span class="star">&#9733;</span>
+                </div>
+                <p class="text-[#1A1A2E] font-semibold mb-2">&ldquo;Does what it says&rdquo;</p>
+                <p class="text-sm text-[#6B7280] mb-3">Straightforward app with a clean user interface. The list of EVs is comprehensive and seems to cover the major marques and variants.</p>
+                <p class="text-xs text-[#9CA3AF]">Echus &mdash; App Store AU</p>
+              </div>
+
+              <div class="flex-shrink-0 w-80 bg-[#F7F8FA] rounded-2xl p-6 border border-gray-100">
+                <div class="flex items-center gap-1 mb-3">
+                  <span class="star">&#9733;</span><span class="star">&#9733;</span><span class="star">&#9733;</span><span class="star">&#9733;</span><span class="star">&#9733;</span>
+                </div>
+                <p class="text-[#1A1A2E] font-semibold mb-2">&ldquo;Excellent aid to EV charging&rdquo;</p>
+                <p class="text-sm text-[#6B7280] mb-3">Cuts down on the guesswork as to how long it&rsquo;s going to take to charge up. Helpful in planning journeys.</p>
+                <p class="text-xs text-[#9CA3AF]">bertybus &mdash; App Store UK</p>
+              </div>
+
+              <div class="flex-shrink-0 w-80 bg-[#F7F8FA] rounded-2xl p-6 border border-gray-100">
+                <div class="flex items-center gap-1 mb-3">
+                  <span class="star">&#9733;</span><span class="star">&#9733;</span><span class="star">&#9733;</span><span class="star">&#9733;</span><span class="star">&#9733;</span>
+                </div>
+                <p class="text-[#1A1A2E] font-semibold mb-2">&ldquo;Exactly what I was looking for!&rdquo;</p>
+                <p class="text-sm text-[#6B7280] mb-3">As an EV driver you don&rsquo;t need more than this &mdash; everything is here. Clear, well-organized, not cluttered.</p>
+                <p class="text-xs text-[#9CA3AF]">Pebba &mdash; App Store DE</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Secondary Features -->
+  <section class="py-20 px-4 bg-[#F7F8FA]">
+    <div class="max-w-4xl mx-auto">
+      <div class="reveal">
+        <h2 class="text-3xl md:text-5xl font-extrabold text-center mb-12 tracking-tight">
+          And so much more
+        </h2>
+      </div>
+
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6 reveal">
+        <div class="mini-feature">
+          <div class="text-3xl mb-2">&#127760;</div>
+          <h3 class="font-bold mb-1">19 Languages</h3>
+          <p class="text-sm text-[#6B7280]">Use it in your language</p>
+        </div>
+
+        <div class="mini-feature">
+          <div class="text-3xl mb-2">&#128268;</div>
+          <h3 class="font-bold mb-1">Works Offline</h3>
+          <p class="text-sm text-[#6B7280]">No internet required</p>
+        </div>
+
+        <div class="mini-feature">
+          <div class="text-3xl mb-2">&#128274;</div>
+          <h3 class="font-bold mb-1">Privacy First</h3>
+          <p class="text-sm text-[#6B7280]">No account needed</p>
+        </div>
+
+        <div class="mini-feature">
+          <div class="text-3xl mb-2">&#128241;</div>
+          <h3 class="font-bold mb-1">Home Screen Widgets</h3>
+          <p class="text-sm text-[#6B7280]">Monitor from home screen</p>
+        </div>
+
+        <div class="mini-feature">
+          <div class="text-3xl mb-2">&#127912;</div>
+          <h3 class="font-bold mb-1">Custom Icons</h3>
+          <p class="text-sm text-[#6B7280]">Fun alternate icons</p>
+        </div>
+
+        <div class="mini-feature">
+          <div class="text-3xl mb-2">&#9889;</div>
+          <h3 class="font-bold mb-1">400V & 800V</h3>
+          <p class="text-sm text-[#6B7280]">Voltage efficiency</p>
+        </div>
+      </div>
     </div>
   </section>
 
   <!-- Final CTA -->
-  <section class="py-20 px-4 bg-gradient-to-b from-[#E8F4FC] to-[#F5F5F7]">
-    <div class="max-w-2xl mx-auto text-center">
+  <section class="py-24 px-4 bg-white relative grain">
+    <div class="max-w-2xl mx-auto text-center z-10 relative reveal">
       <img
         src="https://cdn.kilowattcharging.com/app-icon.png"
         alt="Kilowatt App Icon"
         class="w-20 h-20 mx-auto mb-6 rounded-[22%] shadow-lg"
       >
 
-      <h2 class="text-3xl md:text-4xl font-bold mb-4">
+      <h2 class="text-3xl md:text-5xl font-extrabold mb-4 tracking-tight">
         Start charging smarter
       </h2>
 
-      <p class="text-[#86868B] mb-8">
-        Free download. No ads. No tracking.
+      <p class="text-[#6B7280] mb-2">
+        Download Kilowatt for iPhone.
       </p>
+      <p class="text-sm text-[#9CA3AF] mb-8">No ads. No tracking. No subscription.</p>
 
-      <a
-        href="https://apps.apple.com/app/id1502312657"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="inline-block hover:opacity-90 transition-opacity"
-      >
-        <img
-          src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/en-us"
-          alt="Download on the App Store"
-          class="h-14"
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+        <a
+          href="https://apps.apple.com/app/id1502312657"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-block hover:opacity-90 transition-opacity"
         >
-      </a>
+          <img
+            src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/en-us"
+            alt="Download on the App Store"
+            class="h-14"
+          >
+        </a>
+        <span class="price-badge">&euro;1.99</span>
+      </div>
     </div>
   </section>
 
   <!-- Footer -->
-  <footer class="py-8 px-4 bg-[#1D1D1F] text-white">
+  <footer class="py-8 px-4 bg-[#111119] text-white">
     <div class="max-w-4xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-      <p class="text-sm text-[#86868B]">
-        &copy; 2025 Tijs Teulings
+      <p class="text-sm text-[#6B7280]">
+        &copy; 2026 Tijs Teulings
       </p>
 
       <div class="flex gap-6 text-sm">
-        <a href="/privacy" class="text-[#86868B] hover:text-white transition-colors">
+        <a href="/privacy" class="text-[#6B7280] hover:text-white transition-colors">
           Privacy
         </a>
-        <a href="/terms" class="text-[#86868B] hover:text-white transition-colors">
+        <a href="/terms" class="text-[#6B7280] hover:text-white transition-colors">
           Terms
         </a>
-        <a href="https://bsky.app/profile/kilowattcharging.com" target="_blank" rel="noopener noreferrer" class="text-[#86868B] hover:text-white transition-colors">
+        <a href="https://bsky.app/profile/kilowattcharging.com" target="_blank" rel="noopener noreferrer" class="text-[#6B7280] hover:text-white transition-colors">
           Bluesky
         </a>
-        <a href="https://ko-fi.com/tijsautomatique" target="_blank" rel="noopener noreferrer" class="text-[#86868B] hover:text-white transition-colors">
+        <a href="https://ko-fi.com/tijsautomatique" target="_blank" rel="noopener noreferrer" class="text-[#6B7280] hover:text-white transition-colors">
           Ko-fi
         </a>
-        <a href="mailto:hello@kilowattcharging.com" class="text-[#86868B] hover:text-white transition-colors">
+        <a href="mailto:hello@kilowattcharging.com" class="text-[#6B7280] hover:text-white transition-colors">
           Contact
         </a>
       </div>
     </div>
   </footer>
+
+  <!-- Scroll reveal script -->
+  <script>
+    // First hide all reveal elements via class (not CSS selector)
+    document.querySelectorAll('.reveal').forEach(el => el.classList.add('reveal-hidden'));
+
+    // Then observe and reveal on scroll
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.remove('reveal-hidden');
+          entry.target.classList.add('reveal-visible');
+        }
+      });
+    }, { threshold: 0.08, rootMargin: '0px 0px -20px 0px' });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  </script>
 
 </body>
 </html>
