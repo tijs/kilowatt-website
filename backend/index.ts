@@ -34,6 +34,12 @@ app.get("/", async (c) => {
   return c.html(html);
 });
 
+// Support
+app.get("/support", async (c) => {
+  const html = await readFile("/frontend/support.html", import.meta.url);
+  return c.html(html);
+});
+
 // Privacy Policy
 app.get("/privacy", async (c) => {
   const html = await readFile("/frontend/privacy.html", import.meta.url);
